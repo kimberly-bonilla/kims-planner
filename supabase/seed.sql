@@ -1,0 +1,2 @@
+-- Local development seed data. Runs after migrations on 'supabase db reset'.
+-- Sample vendor profiles are added in Slice 6.

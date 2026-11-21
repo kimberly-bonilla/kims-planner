@@ -1,0 +1,28 @@
+node_modules/
+.next/
+out/
+dist/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+# env files (keep the example)
+.env
+.env*.local
+!.env.example
+
+# test output
+test-results/
+playwright-report/
+blob-report/
+
+# supabase local state
+supabase/.branches/
+supabase/.temp/
+
+# os / editors
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.vercel
