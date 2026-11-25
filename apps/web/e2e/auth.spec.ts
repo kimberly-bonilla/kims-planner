@@ -64,7 +64,7 @@ test.describe("account lifecycle", () => {
     await expect(page).toHaveURL(/\/app$/);
 
     // Log out
-    await page.getByLabel(/Account menu/).click();
+    await page.locator("summary", { hasText: "account menu" }).click();
     await page.getByRole("button", { name: "Log out" }).click();
     await expect(page).toHaveURL(/\/login$/);
 
@@ -77,7 +77,8 @@ test.describe("account lifecycle", () => {
     await page.getByLabel("Email").fill(email);
     await page.getByLabel("Password").fill("wrong-password");
     await page.getByRole("button", { name: "Log in" }).click();
-    await expect(page.getByRole("alert")).toHaveText("Your email or password is incorrect.");
+    // Scope to the form: Next.js also renders a hidden role="alert" route announcer.
+    await expect(page.locator("form").getByRole("alert")).toHaveText("Your email or password is incorrect.");
     await expect(page.getByLabel("Email")).toHaveValue(email);
 
     // Correct password logs back in

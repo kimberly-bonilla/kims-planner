@@ -50,9 +50,9 @@ Pinyon Script (brand moments only, `font-script`).
    Copy `.env.example` to `apps/web/.env.local` and add the URL and anon key
    (needed from Slice 1).
 4. **Supabase Auth settings** (Dashboard → Authentication):
-   - URL Configuration → Site URL: `https://kims-planner-kimberly21.vercel.app`
-   - Redirect URLs: `https://kims-planner-kimberly21.vercel.app/**`,
-     `https://*-kimberly21.vercel.app/**` (previews) and `http://localhost:3000/**`
+   - URL Configuration → Site URL: `https://kims-planner-kimberlyb.vercel.app`
+   - Redirect URLs: `https://kims-planner-kimberlyb.vercel.app/**`,
+     `https://kims-planner-*-kimberlyb.vercel.app/**` (previews) and `http://localhost:3000/**`
    - Sign In / Providers → Email: minimum password length **8** (matches the app).
 5. **Apply migrations to the hosted database:** `npx supabase db push --remote --dry-run`
    to preview, then `npx supabase db push --remote`. (Supabase CLI 3 targets the local
