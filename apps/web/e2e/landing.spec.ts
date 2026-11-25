@@ -7,7 +7,8 @@ test("landing page shows the brand and passes accessibility checks", async ({ pa
 
   await expect(page).toHaveTitle(APP_NAME);
   await expect(page.getByRole("heading", { level: 1, name: APP_NAME })).toBeVisible();
-  await expect(page.getByText("Coming soon")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Create your free account" })).toHaveAttribute("href", "/signup");
+  await expect(page.getByRole("link", { name: "Log in" })).toHaveAttribute("href", "/login");
 
   // No horizontal scroll at any viewport (DES-5).
   const overflow = await page.evaluate(

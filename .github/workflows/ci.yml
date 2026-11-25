@@ -12,7 +12,7 @@ concurrency:
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
 
@@ -32,6 +32,32 @@ jobs:
       - name: Unit tests (Vitest)
         run: npm test
 
+      # A throwaway local Supabase (database + auth) with every migration
+      # applied. Tests create users here, never in the hosted project.
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 3.2.0
+
+      - name: Start local Supabase
+        run: supabase start -x studio,imgproxy,edge-runtime,logflare,vector,realtime,storage-api,postgres-meta,supavisor
+
+      - name: Export local Supabase settings
+        run: |
+          eval "$(supabase status -o env)"
+          # Newer CLIs print PUBLISHABLE_KEY/SECRET_KEY, older ANON_KEY/SERVICE_ROLE_KEY.
+          : "${API_URL:?supabase status did not print API_URL}"
+          : "${PUBLISHABLE_KEY:=${ANON_KEY:?no anon/publishable key}}"
+          : "${SECRET_KEY:=${SERVICE_ROLE_KEY:?no service-role/secret key}}"
+          {
+            echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL"
+            echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=${PUBLISHABLE_KEY:-$ANON_KEY}"
+            echo "SUPABASE_SERVICE_ROLE_KEY=${SECRET_KEY:-$SERVICE_ROLE_KEY}"
+            echo "E2E_SUPABASE=local"
+          } >> "$GITHUB_ENV"
+
+      - name: Database tests (Row Level Security)
+        run: npm run test:integration -w @kims-planner/web
+
       - name: Build
         run: npm run build
 
@@ -48,16 +74,3 @@ jobs:
           name: playwright-report
           path: apps/web/playwright-report
           retention-days: 7
-
-  migrations:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v4
-      - uses: supabase/setup-cli@v1
-        with:
-          version: 3.2.0
-      - name: Apply all migrations to a fresh local database
-        run: |
-          supabase db start
-          supabase db reset

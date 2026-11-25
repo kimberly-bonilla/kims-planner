@@ -1,6 +1,8 @@
 import { APP_TAGLINE } from "@kims-planner/core";
 import { LaceBorder } from "@/components/brand/lace-border";
 import { Wordmark } from "@/components/brand/wordmark";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 const features = [
@@ -28,10 +30,14 @@ export default function HomePage() {
             ))}
           </ul>
 
-          <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-chablis px-4 py-2 text-sm font-medium text-plum">
-            <span aria-hidden="true" className="size-2 rounded-full bg-sage" />
-            Coming soon
-          </p>
+          <div className="mt-4 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+            <Button asChild size="lg">
+              <Link href="/signup">Create your free account</Link>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <Link href="/login">Log in</Link>
+            </Button>
+          </div>
         </div>
         <LaceBorder flip />
       </Card>

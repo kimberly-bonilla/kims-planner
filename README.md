@@ -29,6 +29,7 @@ npm run dev            # http://localhost:3000
 | `npm test` | Vitest unit tests |
 | `npm run build` | Production build of the website |
 | `npm run e2e` | Playwright tests, desktop and phone, with an axe accessibility check |
+| `npm run test:integration -w @kims-planner/web` | Row Level Security tests (needs `supabase start`; runs in CI) |
 | `npm run db:new <name>` | New Supabase migration |
 | `npm run db:reset` | Rebuild the local database from migrations (needs Docker) |
 
@@ -48,3 +49,16 @@ Pinyon Script (brand moments only, `font-script`).
 3. **Supabase:** create a project, then `npx supabase link --project-ref <ref>`.
    Copy `.env.example` to `apps/web/.env.local` and add the URL and anon key
    (needed from Slice 1).
+4. **Supabase Auth settings** (Dashboard → Authentication):
+   - URL Configuration → Site URL: `https://kims-planner-kimberly21.vercel.app`
+   - Redirect URLs: `https://kims-planner-kimberly21.vercel.app/**`,
+     `https://*-kimberly21.vercel.app/**` (previews) and `http://localhost:3000/**`
+   - Sign In / Providers → Email: minimum password length **8** (matches the app).
+5. **Apply migrations to the hosted database:** `npx supabase db push --remote --dry-run`
+   to preview, then `npx supabase db push --remote`. (Supabase CLI 3 targets the local
+   Docker database unless you pass `--remote`.)
+
+## Troubleshooting
+
+- `EINVAL: invalid argument, readlink ... .next` on Windows: OneDrive is syncing the
+  build folder. Delete `apps/web/.next` and start again.
