@@ -1,14 +1,17 @@
 import Link from "next/link";
 import { Wordmark } from "@/components/brand/wordmark";
 import { BottomNav, SideNav } from "./app-nav";
+import type { NavItem } from "./nav-items";
 import { UserMenu } from "./user-menu";
 
 /** Signed-in layout: top bar, side nav on laptops, bottom tabs on phones. */
 export function AppShell({
   user,
+  navItems,
   children,
 }: {
   user: { name: string; email: string };
+  navItems: NavItem[];
   children: React.ReactNode;
 }) {
   return (
@@ -26,12 +29,12 @@ export function AppShell({
         <UserMenu name={user.name} email={user.email} />
       </header>
       <div className="flex flex-1">
-        <SideNav />
+        <SideNav items={navItems} />
         <main id="main" className="flex-1 px-4 pb-24 pt-6 md:px-8 md:pb-10">
           {children}
         </main>
       </div>
-      <BottomNav />
+      <BottomNav items={navItems} />
     </div>
   );
 }

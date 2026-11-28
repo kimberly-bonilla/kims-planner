@@ -1,56 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useId } from "react";
-import { useFormStatus } from "react-dom";
+import { useActionState } from "react";
 import { PASSWORD_MIN_LENGTH } from "@kims-planner/core";
 import { logIn, signUp, type AuthFormState } from "@/app/(auth)/actions";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Field, FormMessage } from "@/components/forms/field";
+import { SubmitButton } from "@/components/forms/submit-button";
 
 const initialState: AuthFormState = { status: "idle" };
-
-function SubmitButton({ children }: { children: React.ReactNode }) {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" className="w-full" disabled={pending} aria-disabled={pending}>
-      {pending ? "Please wait…" : children}
-    </Button>
-  );
-}
-
-function Field({
-  name,
-  label,
-  error,
-  hint,
-  ...inputProps
-}: {
-  name: string;
-  label: string;
-  error?: string;
-  hint?: string;
-} & React.InputHTMLAttributes<HTMLInputElement>) {
-  const id = useId();
-  const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(" ") || undefined;
-  return (
-    <div className="flex flex-col gap-1.5">
-      <Label htmlFor={id}>{label}</Label>
-      <Input id={id} name={name} aria-invalid={error ? true : undefined} aria-describedby={describedBy} {...inputProps} />
-      {hint && !error && (
-        <p id={`${id}-hint`} className="text-xs text-cloak">
-          {hint}
-        </p>
-      )}
-      {error && (
-        <p id={`${id}-error`} className="text-sm font-medium text-plum">
-          {error}
-        </p>
-      )}
-    </div>
-  );
-}
 
 export function AuthForm({ mode, next }: { mode: "login" | "signup"; next?: string }) {
   const [state, formAction] = useActionState(mode === "login" ? logIn : signUp, initialState);
@@ -72,11 +29,7 @@ export function AuthForm({ mode, next }: { mode: "login" | "signup"; next?: stri
     <form action={formAction} noValidate className="flex flex-col gap-5">
       {next && <input type="hidden" name="next" value={next} />}
 
-      {state.message && (
-        <p role="alert" className="rounded-md bg-chablis px-4 py-3 text-sm font-medium text-plum">
-          {state.message}
-        </p>
-      )}
+      {state.message && <FormMessage tone="error">{state.message}</FormMessage>}
 
       {mode === "signup" && (
         <Field
@@ -112,7 +65,7 @@ export function AuthForm({ mode, next }: { mode: "login" | "signup"; next?: stri
         error={fe.password}
       />
 
-      <SubmitButton>{mode === "login" ? "Log in" : "Create account"}</SubmitButton>
+      <SubmitButton className="w-full">{mode === "login" ? "Log in" : "Create account"}</SubmitButton>
 
       <p className="text-center text-sm text-cloak">
         {mode === "login" ? (

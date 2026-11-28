@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { logOut } from "@/app/(auth)/actions";
 
 /** Name + email with a log-out button. Uses <details> so it works without JavaScript. */
@@ -22,6 +23,12 @@ export function UserMenu({ name, email }: { name: string; email: string }) {
           <p className="truncate text-sm font-medium text-plum">{name || "Your account"}</p>
           <p className="truncate text-xs text-cloak">{email}</p>
         </div>
+        <Link
+          href="/app/settings/account"
+          className="flex h-11 w-full items-center rounded-md px-3 text-left text-sm text-plum hover:bg-chablis"
+        >
+          Account settings
+        </Link>
         <form action={logOut}>
           <button
             type="submit"
